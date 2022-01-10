@@ -1,11 +1,13 @@
 const express = require('express');
 const app = express();
-
-
-app.use((req , res , next) => {
+const morgan = require('morgan');
+//middlewere programe qui s'execute avant le reste
+/*app.use((req , res , next) => {
     console.log('URL :' + req.url) //retourne dans le terminale l'url de la requete
     next();
-})
+})*/
+app.use(morgan('dev'))
+
 app.get('/api', (req, res) => {
     res.send('Root API')
 })
