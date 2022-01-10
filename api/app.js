@@ -1,7 +1,7 @@
+const func = require('functions')
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
-
 
 
 const users = [
@@ -10,11 +10,11 @@ const users = [
         name: "Mélissa"
     },
     {
-        id:2,
+        id: 2,
         name: "John"
     },
     {
-        id:3,
+        id: 3,
         name: "Fabien"
     }
 ]
@@ -45,21 +45,27 @@ app.listen('8080', () => {
 
 app.use(morgan('dev'))
 
-app.get('/api/v1/users/:id' , (req , res) => {
-    res.send(users[(req.params.id)-1].name)
+app.get('/api/v1/users/:id', (req, res) => {
+    res.json(func.success(users[(req.params.id) - 1].name))
 })
 
-app.get('/api/v1/users' , (req , res)=>{
-    if(req.query.max != undefined && req.query.max > 0){
-        res.send(users.slice(0, req.query.max)) //permet de mettre un nombre de resultat voulu
+app.get('/api/v1/users', (req, res) => {
+    if (req.query.max != undefined && req.query.max > 0) {
+        res.json(func.success(users.slice(0, req.query.max))) //permet de mettre un nombre de resultat voulu
 
-    }else {
-        res.send(users)
+    } else if(req.query.max != undefined){
+        res.json(func.error('Wrong value'))
+
+    }
+    else {
+        res.json(func.success(users))
     }
 })
 app.listen('8080', () => {
     console.log('listening on 8080')
 })
+
+
 
 
 
