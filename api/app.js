@@ -66,17 +66,29 @@ app.get('/api/v1/users', (req, res) => {
 
 app.post('/api/v1/users', (req, res) => {
     if (req.body.name) {
-        let user = {
-            id: users.length + 1,
-            name: req.body.name
+        let sameName = false
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].name == req.body.name) {
+                res.json(func.error("Name already in use"))
+                sameName = true
+                break
+            }
         }
-        users.push(user)
-        res.json(func.success(user))
-
+        if (sameName) {
+            res.json(func.error("Name already in use"))
+        } else {
+            let user = {
+                id: users.length + 1,
+                name: req.body.name
+            }
+            users.push(user)
+            res.json(func.success(user))
+        }
     } else {
         res.json(func.error('No name value'))
     }
 })
+
 
 app.listen('8080', () => {
     console.log('listening on 8080')
