@@ -25,14 +25,36 @@ function getArticles(user, next) {
  erreur on passe a une tache special pour l'erreur
 */
 console.log("Début")
- new Promise((resolve, reject) => {
+/* new Promise((resolve, reject) => {
     setTimeout(() => {
         resolve("All good")
         //reject(new Error("Error during"))
     }, 1500)
 })
     .then(message => console.log(message))//si tout va bien on execute then
-    .catch(err => console.log(err.message))//sinon erreur catch
+    .catch(err => console.log(err.message))//sinon erreur catch*/
+getUser()
+    .then(user => getArticles(user))
+    .then(articles => console.log(articles))//On peut mettre plusieurs promesses a la suite elle s'executeront
+    .catch(err => console.log(err.message))//un seul catch suffit pour gerer les err
+function getUser() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log("User 1")
+            resolve("User 1")
+            //reject(new Error("Error during getUser()"))
+        }, 1500)
+    })
+}
+
+function getArticles(user) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            reject(new Error("Error during getArticles()"))
+           resolve([1, 2, 3])
+        }, 1500)
+    })
+}
 console.log("Fin")
 
 //Async/Await
