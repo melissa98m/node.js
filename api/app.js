@@ -95,6 +95,35 @@ app.post('/api/v1/users', (req, res) => {
     }
 })
 
+app.put('/api/v1/users/:id', (req, res) => {
+
+    let index = getIndex(req.params.id);
+    if (typeof (index) == 'string') {
+        res.json(error(index))
+    } else {
+
+        let same = false
+
+        for (let i = 0; i < users.length; i++) {
+            if (req.body.name == users[i].name && req.params.id != users[i].id) {
+                same = true
+                break
+            }
+        }
+        if (same) {
+            res.json(error('Same name'))
+
+        } else {
+            users[index].name = req.body.name
+            res.json(success(true))
+
+        }
+    }
+
+
+
+})
+
 
 app.listen('8080', () => {
     console.log('listening on 8080')
