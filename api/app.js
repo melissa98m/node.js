@@ -2,8 +2,7 @@ const {success, error} = require('functions')
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
-
-
+const config = require('./config')
 const users = [
     {
         id: 1,
@@ -131,9 +130,9 @@ UsersRouter.route('/:id') //Routeur
         }
     })
 
-app.use('/api/v1/users', UsersRouter)
+app.use(config.rootAPI+'/users', UsersRouter)
 
-app.listen('8080', () => {
+app.listen(config.port , () => {
     console.log('listening on 8080')
 })
 
