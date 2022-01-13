@@ -48,6 +48,7 @@ app.use(morgan('dev'))
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({extended: true})) // for parsing application/x-www-form-urlencoded
 
+//GET
 app.get('/api/v1/users/:id', (req, res) => {
 
     let index = getIndex(req.params.id);
@@ -70,6 +71,7 @@ app.get('/api/v1/users', (req, res) => {
     }
 })
 
+//POST
 app.post('/api/v1/users', (req, res) => {
     if (req.body.name) {
         let sameName = false
@@ -84,7 +86,7 @@ app.post('/api/v1/users', (req, res) => {
             res.json(error("Name already in use"))
         } else {
             let user = {
-                id: users.length + 1,
+                id: createId(),
                 name: req.body.name
             }
             users.push(user)
@@ -95,6 +97,7 @@ app.post('/api/v1/users', (req, res) => {
     }
 })
 
+//PUT
 app.put('/api/v1/users/:id', (req, res) => {
 
     let index = getIndex(req.params.id);
@@ -121,6 +124,19 @@ app.put('/api/v1/users/:id', (req, res) => {
     }
 
 
+})
+
+//DELETE
+
+app.delete('/api/v1/users/:id', (req, res) => {
+
+    let index = getIndex(req.params.id);
+    if (typeof (index) == 'string') {
+        res.json(error(index))
+    } else {
+        users.splice(index, 1)
+        res.json(success(users))
+    }
 
 })
 
@@ -129,13 +145,18 @@ app.listen('8080', () => {
     console.log('listening on 8080')
 })
 
-function getIndex(id) {
+function getIndex(id) {  //fonction pour avoir l'index
     for (let i = 0; i < users.length; i++) {
         if (users[i].id == id) {
             return i
         }
     }
     return "Wrong id"
+}
+
+function createId() {
+    return lastUser = users[users.length - 1].id + 1
+
 }
 
 
