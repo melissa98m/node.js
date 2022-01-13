@@ -63,6 +63,7 @@ console.log("Fin")
 */
 
 //UTILISATION DE PROMESSE EN PARALLELE
+/*
 console.log("Début")
 let p1 = new Promise((resolve, reject) => {
     setTimeout(() =>{
@@ -79,6 +80,34 @@ Promise.all([p1,p2])  //.all va attendre toute les promise avant le resultat (to
     .then(result => console.log(result))
 
 console.log("Fin")
-
-//Async/Await
+*/
+//ASYNC/AWAIT  s'utilise avec des variable
+console.log("Début");
+(async () => {  //permet de faire comme si c'était du code synchrome cad faire differentes ligne
+    try {
+        let user = await getUser()
+        let articles = await getArticles(user)
+        console.log(articles)
+    } catch (err) {
+        console.log(err.message)
+    }
+})()
+function getUser() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log("User 1")
+            resolve("User 1")
+            //reject(new Error("Error during getUser()"))
+        }, 1500)
+    })
+}
+function getArticles(user) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            //reject(new Error("Error during getArticles()"))
+            resolve([1, 2, 3])
+        }, 1500)
+    })
+}
+console.log("Fin")
 
