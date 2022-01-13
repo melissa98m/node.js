@@ -1,4 +1,4 @@
-const func = require('functions')
+const {success, error} = require('functions')
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
@@ -49,18 +49,24 @@ app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({extended: true})) // for parsing application/x-www-form-urlencoded
 
 app.get('/api/v1/users/:id', (req, res) => {
-    res.json(func.success(users[(req.params.id) - 1].name))
+
+    let index = getIndex(req.params.id);
+    if (typeof (index) == 'string') {
+        res.json(error(index))
+    } else {
+        res.json(success(users[index]))
+    }
 })
 
 app.get('/api/v1/users', (req, res) => {
     if (req.query.max != undefined && req.query.max > 0) {
-        res.json(func.success(users.slice(0, req.query.max))) //permet de mettre un nombre de resultat voulu
+        res.json(success(users.slice(0, req.query.max))) //permet de mettre un nombre de resultat voulu
 
     } else if (req.query.max != undefined) {
-        res.json(func.error('Wrong value'))
+        res.json(error('Wrong value'))
 
     } else {
-        res.json(func.success(users))
+        res.json(success(users))
     }
 })
 
@@ -69,23 +75,23 @@ app.post('/api/v1/users', (req, res) => {
         let sameName = false
         for (let i = 0; i < users.length; i++) {
             if (users[i].name == req.body.name) {
-                res.json(func.error("Name already in use"))
+                res.json(error("Name already in use"))
                 sameName = true
                 break
             }
         }
         if (sameName) {
-            res.json(func.error("Name already in use"))
+            res.json(error("Name already in use"))
         } else {
             let user = {
                 id: users.length + 1,
                 name: req.body.name
             }
             users.push(user)
-            res.json(func.success(user))
+            res.json(success(user))
         }
     } else {
-        res.json(func.error('No name value'))
+        res.json(error('No name value'))
     }
 })
 
@@ -93,6 +99,15 @@ app.post('/api/v1/users', (req, res) => {
 app.listen('8080', () => {
     console.log('listening on 8080')
 })
+
+function getIndex(id) {
+    for (let i = 0; i < users.length; i++) {
+        if (users[i].id == id) {
+            return i
+        }
+    }
+    return "Wrong id"
+}
 
 
 
