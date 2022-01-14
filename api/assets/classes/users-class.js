@@ -35,7 +35,6 @@ let Users = class {
                     .catch((err) => next(err))
             }
         })
-
     }
 
     static addUser(name) {
@@ -95,6 +94,18 @@ let Users = class {
         })
     }
 
-
-
+    static delete(id) {
+        return new Promise((next) => {
+            db.query("SELECT * FROM users WHERE id= ?", [id])
+                .then((result) => {
+                    if (result[0] != undefined) {
+                        return db.query("DELETE FROM users WHERE id = ?", [id])
+                    } else {
+                        next(new Error("Wrong id value"))
+                    }
+                })
+                .then(() =>next(true))
+                .catch((err) => next(err))
+        })
+    }
 }

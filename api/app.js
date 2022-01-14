@@ -45,24 +45,9 @@ mysql.createConnection({
                 res.json(checkAndChange(updateUser))
             })
             //DELETE one user
-            .delete((req, res) => {
-                db.query("SELECT * FROM users WHERE id= ?", [req.params.id], (err, result) => {
-                    if (err) {
-                        res.json(error(err.message))
-                    } else {
-                        if (result[0] != undefined) {
-                            db.query("DELETE FROM users WHERE id = ?", [req.params.id], (err, result) => {
-                                if (err) {
-                                    res.json(error(err.message))
-                                } else {
-                                    res.json(success(true))
-                                }
-                            })
-                        } else {
-                            res.json(error("Wrong id value"))
-                        }
-                    }
-                })
+            .delete(async (req, res) => {
+                let deleteUser = await Users.delete(req.params.id)
+                res.json(checkAndChange(deleteUser))
             })
 
         app.use(config.rootAPI + '/users', UsersRouter)
