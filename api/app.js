@@ -137,14 +137,23 @@ db.connect((err) => {
             })
             //DELETE one user
             .delete((req, res) => {
-
-                let index = getIndex(req.params.id);
-                if (typeof (index) == 'string') {
-                    res.json(error(index))
-                } else {
-                    users.splice(index, 1)
-                    res.json(success(users))
-                }
+                db.query("SELECT * FROM users WHERE id= ?", [req.params.id], (err, result) => {
+                    if (err) {
+                        res.json(error(err.message))
+                    } else {
+                        if (result[0] != undefined) {
+                            db.query("DELETE FROM users WHERE id = ?", [req.params.id], (err, result) => {
+                                if (err) {
+                                    res.json(error(err.message))
+                                } else {
+                                    res.json(success(true))
+                                }
+                            })
+                        } else {
+                            res.json(error("Wrong id value"))
+                        }
+                    }
+                })
             })
 
         app.use(config.rootAPI + '/users', UsersRouter)
@@ -181,20 +190,6 @@ app.listen('8080', () => {
 })
 */
 
-
-function getIndex(id) {  //fonction pour avoir l'index
-    for (let i = 0; i < users.length; i++) {
-        if (users[i].id == id) {
-            return i
-        }
-    }
-    return "Wrong id"
-}
-
-function createId() {
-    return lastUser = users[users.length - 1].id + 1
-
-}
 
 
 
