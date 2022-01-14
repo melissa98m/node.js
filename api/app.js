@@ -1,4 +1,4 @@
-const {success, error} = require('./assets/functions')
+const {success, error , isErr} = require('./assets/functions.js')
 const mysql = require('promise-mysql')
 const express = require('express');
 const morgan = require('morgan')('dev');
@@ -10,10 +10,8 @@ mysql.createConnection({
     user: config.db.user,
     password: config.db.password,
 }).then((db) => {
-
         console.log("Connection established")
         const app = express();
-
         let UsersRouter = express.Router()
         let Users = require('./assets/classes/users-class')(db, config)
         console.log(Users)
@@ -83,19 +81,10 @@ mysql.createConnection({
 
         UsersRouter.route('/:id') //Routeur
             //GET one user with id
-            .get((req, res) => {
-                db.query("SELECT * FROM users WHERE id= ?", [req.params.id], (err, result) => {
-                    if (err) {
-                        res.json(error(err.message))
-                    } else {
-                        if (result[0] != undefined) {
-                            res.json(success(result[0]))
-                        } else {
-                            res.json(error("Wrong id value"))
-                        }
-                    }
-                })
-
+            //GET one user with id
+            .get(async (req, res) => {
+                let user = await Users.getById(req.params.id)
+               res.json(isErr(user) ? error(user.message) : success(user))
             })
             //PUT modify one user with id
             .put((req, res) => {

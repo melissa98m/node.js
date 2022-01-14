@@ -10,3 +10,6 @@ exports.error = function error(message) {
         message: message
     }
 }
+exports.isErr = (err) => {
+    return err instanceof Error;
+}
