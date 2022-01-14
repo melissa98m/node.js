@@ -2,7 +2,7 @@ const {success, error} = require('./assets/functions')
 const mysql = require('mysql')
 const bodyParser = require('body-parser')
 const express = require('express');
-const morgan = require('morgan');
+const morgan = require('morgan')('dev');
 const config = require('./assets/config.json')
 
 const db = mysql.createConnection({
@@ -21,8 +21,10 @@ db.connect((err) => {
         const app = express();
 
         let UsersRouter = express.Router()
+        let Users = require('./assets/classes/users-class')(db , config)
+        console.log(Users)
 
-        app.use(morgan('dev'))
+        app.use(morgan)
         app.use(express.json()) // for parsing application/json
         app.use(express.urlencoded({extended: true})) // for parsing application/x-www-form-urlencoded
 
