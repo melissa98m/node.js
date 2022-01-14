@@ -86,9 +86,9 @@ db.connect((err) => {
             })
 
         UsersRouter.route('/:id') //Routeur
-            //GET one member with id
+            //GET one user with id
             .get((req, res) => {
-                db.query("SELECT * FROM members WHERE id= ?", [req.params.id], (err, result) => {
+                db.query("SELECT * FROM users WHERE id= ?", [req.params.id], (err, result) => {
                     if (err) {
                         res.json(error(err.message))
                     } else {
@@ -102,25 +102,37 @@ db.connect((err) => {
 
             })
             //PUT modify one user with id
-        .put((req, res) => {
-                let index = getIndex(req.params.id);
-                if (typeof (index) == 'string') {
-                    res.json(error(index))
-                } else {
-                    let same = false
-                    for (let i = 0; i < users.length; i++) {
-                        if (req.body.name == users[i].name && req.params.id != users[i].id) {
-                            same = true
-                            break
+            .put((req, res) => {
+                if (req.body.name) {
+                    db.query("SELECT * FROM users WHERE id = ?", [req.params.id], (err, result) => { // je verifie si l'user existe
+                        if (err) {
+                            res.json(error(err.message))
+                        } else {
+                            if (result[0] != undefined) {
+                                db.query('SELECT * FROM users WHERE name = ? AND id != ?', [req.body.name, req.params.id], (err, result) => { // si il existe je verifie sont nom
+                                    if (err) {
+                                        res.json(error(err.message))
+                                    } else {
+                                        if (result[0] != undefined) { // si c'est le meme nom
+                                            res.json(error("Same name"))
+                                        } else { // sinon je le modifie
+                                            db.query('UPDATE users SET name = ? WHERE id = ?', [req.body.name, req.params.id], (err, result) => {
+                                                if (err) {
+                                                    res.json(error(err.message))
+                                                } else {
+                                                    res.json(success(true))
+                                                }
+                                            })
+                                        }
+                                    }
+                                })
+                            } else {
+                                res.json(error("Wrong id value"))
+                            }
                         }
-                    }
-                    if (same) {
-                        res.json(error('Same name'))
-
-                    } else {
-                        users[index].name = req.body.name
-                        res.json(success(true))
-                    }
+                    })
+                } else {
+                    res.json(error("No name value"))
                 }
             })
             //DELETE one user
