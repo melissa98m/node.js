@@ -41,11 +41,8 @@ let Users = class {
     static addUser(name) {
 
         return new Promise((next) => {
-
             if (name != undefined && name.trim() != '') {
-
                 name = name.trim()
-
                 db.query('SELECT * FROM users WHERE name = ?', [name])
                     .then((result) => {
                         if (result[0] != undefined) {
@@ -64,13 +61,40 @@ let Users = class {
                         })
                     })
                     .catch((err) => next(err))
-
             } else {
                 next(new Error("No name value"))
             }
-
         })
-
     }
+
+    static update(id, name) {
+
+        return new Promise((next) => {
+            if (name != undefined && name.trim() != '') {
+                name = name.trim()
+                db.query('SELECT * FROM users WHERE id = ?', [id])
+                    .then((result) => {
+                        if (result[0] != undefined) {
+                            return db.query('SELECT * FROM users WHERE name = ? AND id != ?', [name, id])
+                        } else {
+                            next(new Error('Wrong id value'))
+                        }
+                    })
+                    .then((result) => {
+                        if (result[0] != undefined) {
+                            next(new Error("Same name"))
+                        } else {
+                            return db.query('UPDATE users SET name = ? WHERE id = ?', [name, id])
+                        }
+                    })
+                    .then(() => next(true))
+                    .catch((err) => next(err))
+            } else {
+                next(new Error("No name value"))
+            }
+        })
+    }
+
+
 
 }

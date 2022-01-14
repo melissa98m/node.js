@@ -40,38 +40,9 @@ mysql.createConnection({
                res.json(isErr(user) ? error(user.message) : success(user))
             })
             //PUT modify one user with id
-            .put((req, res) => {
-                if (req.body.name) {
-                    db.query("SELECT * FROM users WHERE id = ?", [req.params.id], (err, result) => { // je verifie si l'user existe
-                        if (err) {
-                            res.json(error(err.message))
-                        } else {
-                            if (result[0] != undefined) {
-                                db.query('SELECT * FROM users WHERE name = ? AND id != ?', [req.body.name, req.params.id], (err, result) => { // si il existe je verifie sont nom
-                                    if (err) {
-                                        res.json(error(err.message))
-                                    } else {
-                                        if (result[0] != undefined) { // si c'est le meme nom
-                                            res.json(error("Same name"))
-                                        } else { // sinon je le modifie
-                                            db.query('UPDATE users SET name = ? WHERE id = ?', [req.body.name, req.params.id], (err, result) => {
-                                                if (err) {
-                                                    res.json(error(err.message))
-                                                } else {
-                                                    res.json(success(true))
-                                                }
-                                            })
-                                        }
-                                    }
-                                })
-                            } else {
-                                res.json(error("Wrong id value"))
-                            }
-                        }
-                    })
-                } else {
-                    res.json(error("No name value"))
-                }
+            .put(async (req, res) => {
+                let updateUser = await Users.update(req.params.id, req.body.name)
+                res.json(checkAndChange(updateUser))
             })
             //DELETE one user
             .delete((req, res) => {
