@@ -1,4 +1,3 @@
-
 let db, config
 
 module.exports = (_db, _config) => {
@@ -38,4 +37,40 @@ let Users = class {
         })
 
     }
+
+    static addUser(name) {
+
+        return new Promise((next) => {
+
+            if (name != undefined && name.trim() != '') {
+
+                name = name.trim()
+
+                db.query('SELECT * FROM users WHERE name = ?', [name])
+                    .then((result) => {
+                        if (result[0] != undefined) {
+                            next(new Error("Name already in use"))
+                        } else {
+                            return db.query('INSERT INTO users(name) VALUES(?)', [name])
+                        }
+                    })
+                    .then(() => {
+                        return db.query('SELECT * FROM users WHERE name = ?', [name])
+                    })
+                    .then((result) => {
+                        next({
+                            id: result[0].id,
+                            name: result[0].name
+                        })
+                    })
+                    .catch((err) => next(err))
+
+            } else {
+                next(new Error("No name value"))
+            }
+
+        })
+
+    }
+
 }

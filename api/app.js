@@ -27,39 +27,9 @@ mysql.createConnection({
                 res.json(checkAndChange(allUsers))
             })
             //POST one user
-            .post((req, res) => {
-                if (req.body.name) {
-
-                    db.query('SELECT * FROM users WHERE name = ?', [req.body.name], (err, result) => { //verifie si le nom est pas deja pris
-                        if (err) {
-                            res.json(error(err.message))
-                        } else {
-                            if (result[0] != undefined) {
-                                res.json(error('Name already in use'))
-                            } else {
-                                db.query('INSERT INTO users(name) VALUES (?)', [req.body.name], (err, result) => { //insert le nouveau user
-                                    if (err) {
-                                        res.json(error(err.message))
-                                    } else {
-                                        db.query('SELECT * FROM users WHERE name = ?', [req.body.name], (err, result) => { // on recupere ensuite sans id
-                                            if (err) {
-                                                res.json(error(err.message))
-                                            } else {
-                                                res.json(success({  //on envoi le succes avec le nom et l'id
-                                                    id: result[0].id,
-                                                    name: result[0].name
-                                                }))
-                                            }
-                                        })
-
-                                    }
-                                })
-
-                            }
-
-                        }
-                    })
-                }
+            .post(async (req, res) => {
+                let addUser = await Users.addUser(req.body.name)
+                res.json(checkAndChange(addUser))
             })
 
         UsersRouter.route('/:id') //Routeur
