@@ -1,4 +1,4 @@
-const {success, error , isErr} = require('./assets/functions.js')
+const {success, error , isErr , checkAndChange} = require('./assets/functions.js')
 const mysql = require('promise-mysql')
 const express = require('express');
 const morgan = require('morgan')('dev');
@@ -22,26 +22,9 @@ mysql.createConnection({
 
         UsersRouter.route('/')
             //GET all user
-            .get((req, res) => {
-                if (req.query.max != undefined && req.query.max > 0) {
-                    db.query('SELECT * FROM users LIMIT 0,?', [req.query.max], (err, result) => {
-                        if (err) {
-                            res.json(error(err.message))
-                        } else {
-                            res.json(success(result))
-                        }
-                    })
-                } else if (req.query.max != undefined) {
-                    res.json(error('Wrong value'))
-                } else {
-                    db.query('SELECT * FROM users', (err, result) => {
-                        if (err) {
-                            res.json(error(err.message))
-                        } else {
-                            res.json(success(result))
-                        }
-                    })
-                }
+            .get(async (req, res) => {
+                let allUsers = await Users.getAll(req.query.max)
+                res.json(checkAndChange(allUsers))
             })
             //POST one user
             .post((req, res) => {

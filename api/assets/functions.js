@@ -13,3 +13,12 @@ exports.error = function error(message) {
 exports.isErr = (err) => {
     return err instanceof Error;
 }
+
+// Envoie le bon format de réponse selon l'objet à envoyer
+exports.checkAndChange = (obj) => {
+    if (this.isErr(obj)) {
+        return this.error(obj.message)
+    } else {
+        return this.success(obj)
+    }
+}
