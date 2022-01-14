@@ -1,27 +1,21 @@
 const {success, error} = require('./assets/functions')
-const mysql = require('mysql')
-const bodyParser = require('body-parser')
+const mysql = require('promise-mysql')
 const express = require('express');
 const morgan = require('morgan')('dev');
 const config = require('./assets/config.json')
 
-const db = mysql.createConnection({
-    host: config.db.host ,
+mysql.createConnection({
+    host: config.db.host,
     database: config.db.database,
     user: config.db.user,
     password: config.db.password,
-})
+}).then((db) => {
 
-db.connect((err) => {
-    if (err) {
-        console.log(err.message)
-    } else {
         console.log("Connection established")
-
         const app = express();
 
         let UsersRouter = express.Router()
-        let Users = require('./assets/classes/users-class')(db , config)
+        let Users = require('./assets/classes/users-class')(db, config)
         console.log(Users)
 
         app.use(morgan)
@@ -165,39 +159,10 @@ db.connect((err) => {
         })
 
     }
+).catch((err) => {
+    console.log("Error during database connection")
+    console.log(err.message)
 })
-
-
-//middlewere programe qui s'execute avant le reste
-/*app.use((req , res , next) => {
-    console.log('URL :' + req.url) //retourne dans le terminale l'url de la requete
-    next();
-})
-app.use(morgan('dev'))
-
-app.get('/api', (req, res) => {
-    res.send('Root API')
-})
-
-app.get('/api/v1', (req, res) => {
-    res.send('API Version 1')
-})
-
-app.get('/api/v1/user/:id', (req, res) => {
-    res.send(req.params)
-})
-
-app.listen('8080', () => {
-    console.log('listening on 8080')
-})
-*/
-
-
-
-
-
-
-
 
 
 
