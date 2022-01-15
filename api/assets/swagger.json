@@ -1,30 +1,51 @@
 {
   "definitions": {},
   "info": {
-    "title": "api",
+    "title": "api REST en node.js",
     "version": "1.0.0",
     "license": {
       "name": "ISC"
     },
-    "description": "Specification JSONs: [v2](/api-spec/v2), [v3](/api-spec/v3)."
+    "description": "API REST pour gerer des utilisateur"
   },
+  "basePath": "/api/v1",
+  "host": "localhost:8080",
+  "tags": [
+    {
+      "name": "users",
+      "description": "methode permettant de gerer les user"
+    }
+  ],
   "paths": {
-    "/api/v1/users": {
+    "/users": {
       "get": {
-        "summary": "/api/v1/users",
+        "tags": ["users"],
+        "summary": "/users",
         "consumes": [
           "application/json"
         ],
-        "parameters": [],
-        "responses": {},
-        "tags": []
+        "parameters": [
+          {
+            "name": "max",
+            "in": "query",
+            "required": false
+          }
+        ],
+        "responses": {}
       },
       "post": {
-        "summary": "/api/v1/users",
+        "tags": ["users"],
+        "summary": "/users",
         "consumes": [
           "application/json"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "body",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -43,7 +64,6 @@
             }
           }
         },
-        "tags": [],
         "produces": [
           "application/json"
         ]
@@ -51,7 +71,8 @@
     },
     "/api/v1/users/{id}": {
       "get": {
-        "summary": "/api/v1/users/{id}",
+        "tags": ["users"],
+        "summary": "/users/{id}",
         "consumes": [
           "application/json"
         ],
@@ -62,11 +83,11 @@
             "required": true
           }
         ],
-        "responses": {},
-        "tags": []
+        "responses": {}
       },
       "put": {
-        "summary": "/api/v1/users/{id}",
+        "tags": ["users"],
+        "summary": "/users/{id}",
         "consumes": [
           "application/json"
         ],
@@ -77,11 +98,11 @@
             "required": true
           }
         ],
-        "responses": {},
-        "tags": []
+        "responses": {}
       },
       "delete": {
-        "summary": "/api/v1/users/{id}",
+        "tags": ["users"],
+        "summary": "/users/{id}",
         "consumes": [
           "application/json"
         ],
@@ -92,11 +113,9 @@
             "required": true
           }
         ],
-        "responses": {},
-        "tags": []
+        "responses": {}
       }
     }
   },
-  "swagger": "2.0",
-  "tags": []
+  "swagger": "2.0"
 }
