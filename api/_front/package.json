@@ -13,7 +13,8 @@
   "dependencies": {
     "babel-register": "^6.26.0",
     "body-parser": "^1.19.1",
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "twig": "^1.15.4"
   },
   "devDependencies": {
     "morgan": "^1.10.0"
