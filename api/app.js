@@ -1,6 +1,7 @@
 const {success, error , isErr , checkAndChange} = require('./assets/functions.js')
 const mysql = require('promise-mysql')
 const express = require('express');
+const expressOasGenerator = require('express-oas-generator');
 const morgan = require('morgan')('dev');
 const config = require('./assets/config.json')
 
@@ -10,11 +11,13 @@ mysql.createConnection({
     user: config.db.user,
     password: config.db.password,
 }).then((db) => {
-        console.log("Connection established")
-        const app = express();
-        let UsersRouter = express.Router()
-        let Users = require('./assets/classes/users-class')(db, config)
-        console.log(Users)
+    console.log("Connection established")
+    const app = express();
+    expressOasGenerator.init(app, {}); // to overwrite generated specification's values use second argument.
+
+    let UsersRouter = express.Router()
+    let Users = require('./assets/classes/users-class')(db, config)
+    console.log(Users)
 
         app.use(morgan)
         app.use(express.json()) // for parsing application/json
