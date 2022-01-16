@@ -12,16 +12,17 @@
     <title>{{ user.name }}</title>
 </head>
 <body class="m-5">
-<h1 class="mb-5 text-center"> Détails de {{ user.name }}</h1>
+<h1 class="mb-5 text-center"> Détails  {{ user.name }}</h1>
 
 <div class="card" style="width: 250px;">
     <h5 class="card-header">{{ user.id }}</h5>
     <div class="card-body">
         <h5 class="card-title">{{ user.name }}</h5>
-        <p class="card-text">Modifier un user </p>
-        <a href="#" class="btn btn-primary">Modifier</a>
+        <button class="btn btn-primary" style="cursor: pointer;" onclick="document.location='/users/edit/{{ user.id }}'">Edit</button>
     </div>
 </div>
+
+<a class="btn btn-primary mt-4" href='/users'>Home</a>
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"

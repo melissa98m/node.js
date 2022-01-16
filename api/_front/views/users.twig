@@ -23,13 +23,14 @@
     <tbody>
     <tr>
         {% for user in users %}
-    <tr>
+    <tr  style="cursor: pointer;" onclick="document.location='/users/{{ user.id }}'">
         <td>{{ user.id }}</td>
         <td>{{ user.name }}</td>
         {% endfor %}
     </tr>
     </tbody>
 </table>
+<a class="btn btn-primary" href='/add'>Add user</a>
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
