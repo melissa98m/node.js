@@ -66,6 +66,19 @@ app.post('/delete', (req, res) => {
         res.redirect('/users')
     })
 })
+
+//Ajouter un user
+app.get('/add', (req, res) => {
+    res.render('addUser.twig')
+})
+
+//Methode creant l'user
+app.post('/add', (req, res) => {
+    apiCall('/users', 'post', {name: req.body.name}, res, (result) => {
+        res.redirect('/users')
+    })
+})
+
 //Lancement de l'app
     app.listen(port, () => console.log('listening on port 8081'))
 
